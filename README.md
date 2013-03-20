@@ -1,20 +1,21 @@
 # GenApp Recovery Kits
 
 ## Summary
-The LifeKeeper Generic Application (GenApp) is an entry point into the world of custom Highly Available applications. GenApp is a harness that allows you to interface your application with the LifeKeeper framework. Quickly and easily make any application highly available with GenApp!
+The SIOS Steeleye Protection Suite &copy; Generic Application (GenApp) is an entry point into the world of custom Highly Available applications. GenApp is a harness that allows you to interface your application with the LifeKeeper framework. Quickly and easily make any application highly available with GenApp!
 
-SIOS Steeleye Protection Suite (c) is an enterprise class application and data high availability supporting single & multi-site clusters leveraging any server and storage environment.
+Steeleye Protection Suite (SPS) is an enterprise class application and data high availability supporting single & multi-site clusters leveraging any server and storage environment.
 
 More information, including evaluation copies, can be found at http://us.sios.com.
 
 
 ### Purpose
 * GenApp kits provide a robust harness to protect custom applications
-* Easily integrate your application with SIOS Technology's SPS solution
+* Easily integrate many applications with the SPS solution
+
 
 ### Technologies
-* Requires the SPS application from SIOS Technolgy Corporation to be installed on all nodes of the cluster.
-* SPS (LifeKeeper) is supported on either Red Hat Enterprise Linux (RHEL) or SuSE Linux Enterprise Server (SLES)
+* Requires the Steeleye Protection Suite installed on all nodes of the cluster.
+* SPS for Linux is supported on either Red Hat Enterprise Linux (RHEL) or SuSE Linux Enterprise Server (SLES)
 * Any Scipting language or binary can be used for with the GenApp. All it has to do is be executable and can interact with Linux's send event API.
 
 	
