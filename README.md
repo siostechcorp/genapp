@@ -1,7 +1,7 @@
 # GenApp Recovery Kits
 
 ## Summary
-The SIOS Steeleye Protection Suite &copy; Generic Application (GenApp) is an entry point into the world of custom Highly Available applications. GenApp is a harness that allows you to interface your application with the LifeKeeper framework. Quickly and easily make any application highly available with GenApp!
+The SIOS Steeleye Protection Suite &copy; Generic Application (GenApp) is an entry point into the world of custom Highly Available applications. GenApp is a harness that allows you to interface your application with the SPS framework. Quickly and easily make any application highly available with GenApp!
 
 Steeleye Protection Suite (SPS) is an enterprise class application and data high availability supporting single & multi-site clusters leveraging any server and storage environment.
 
