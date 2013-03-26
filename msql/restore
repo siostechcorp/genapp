@@ -1,0 +1,79 @@
+#!/usr/bin/perl
+# Copyright (c) 2003 SteelEye Technology Inc. - Mountain View, CA, USA
+#
+#	restore 
+#
+# Description:  The restore script is responsible for starting the msql
+#				daemons
+#
+# Arguments:
+#   -t tag - LifeKeeper resource tag name
+#   -i id - LifeKeeper resource internal identifier
+#
+# Outputs:
+#	0 - success
+#	1 - failures
+#
+# This software is provided "as is" without warranty of any kind, either
+# expressed or implied, including, but not limited to, the implied
+# warranties of merchantability and fitness for a particular task.
+#
+################### LifeKeeper Linux Change Log ############################
+#
+# MR/CR          date        user    description
+# =====          ====        ====    ===========
+
+use Getopt::Std; # use the standard getopt package
+use strict;
+use vars qw( $opt_t $opt_i ); 
+
+require '/etc/default/LifeKeeper.pl';
+my $lkroot=$ENV{LKROOT};
+my $bindir;
+my $conffile;
+my $debug;
+my $ret;
+my $versionret;
+my $info;
+my $null="/dev/null";
+chomp (my $sys=`$lkroot/bin/lcduname 2>$null`);
+getopts('t:i:');
+my $tag = "$opt_t";
+my $id = "$opt_i";
+if ($tag eq '' || $id eq '' ){
+	LKlog( "Unable to get the tag or id for the resource instance");
+	($debug) && LKlog( "tag:$tag:");
+	($debug) && LKlog( "id:$id:");
+	exit 1;
+}
+
+# get info from info field of gen/app resource
+chomp ($info=`$lkroot/bin/ins_list -t $tag -f: 2>$null|cut -f6 -d: 2>$null`);
+($bindir,$conffile)=split (/\s+/,$info);
+
+# validate info field values
+if (! -d $bindir || ! -f $conffile ){
+	LKlog( "Unable to get valid values from the info field");
+	($debug ) && LKlog( "bindir:$bindir");
+	($debug ) && LKlog( "conffile:$conffile");
+	exit 1;
+}
+
+# check if msql3d is running
+system ("$bindir/msqladmin -f $conffile version >$null 2>&1");
+$versionret=$?;
+($versionret == 0) && exit 0;
+
+# start msql3d
+system ("$bindir/msql3d -f $conffile >$null 2>&1 &");
+$ret=$?;
+
+# check if msql3d is running after the startup attempt
+system ("$bindir/msqladmin -f $conffile version >$null 2>&1");
+$versionret=$?;
+
+# check return codes and exit
+($versionret == 0) && exit 0;
+($debug ) && LKlog( "Restore failed. Startup return:$ret; status return:$versionret");
+exit 1;
+

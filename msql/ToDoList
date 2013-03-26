@@ -1,0 +1,26 @@
+###############################################################################
+#
+# Date: 11/12/2003
+#
+# To Do List for msql gen/app
+#
+
+1. 	Enhance all LKlog messages to include the date and tag
+2. 	Add additional debug messages
+3. 	Improve logging (adding additional messages, more information)
+4. 	Enhance error handling
+5. 	Test manual switchovers
+6. 	Test failovers (panic & shutdown)
+7 	Improve quickCheck (ex:  Add port number 
+		to info field and check against version output)
+8. 	Enhance and test kill code for remove and recover if instance 
+		will not stop cleanly
+9. 	Implement clean up code for remove and recover when 
+		instance was killed (remove pid file, socket file, etc)
+10.	Test startup and stopping
+11.	Test A/A (multiple msql3d daemons)
+12.	Test A/A attempting to use same configuration file
+13.	Add code to support the multi-threaded msql3_broker daemon  
+14. Test running msql3_broker and msql3d daemon in A/A
+15. Create tar ball package and build scripts
+16. Create and execute alpha test plan
