@@ -1,7 +1,6 @@
 #!/usr/bin/perl
-# Copyright (c) 2003 SteelEye Technology Inc. - Mountain View, CA, USA
 #
-#	restore 
+# Name: restore 
 #
 # Description:  The restore script is responsible for starting the msql
 #				daemons
