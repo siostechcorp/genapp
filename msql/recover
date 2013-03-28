@@ -1,7 +1,6 @@
 #!/usr/bin/perl
-# Copyright (c) 2003 SteelEye Technology Inc. - Mountain View, CA, USA
 #
-#	recover 
+# Name: recover 
 #
 # Description:  The recover script is responsible for recovering the msql
 #				daemons
