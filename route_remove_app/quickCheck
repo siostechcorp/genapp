@@ -1,0 +1,132 @@
+#!/opt/LifeKeeper/bin/perl
+#
+#	Copyright (c) 2018 SIOS Technology Corp.
+# Description:
+#
+# Author:  cmr
+#
+# Implementation Date:
+#
+# Arguments:
+#	-t TAG		Tag name (gen/app)
+#	-i ID		ID
+#
+# Output:
+#   0 - no errors
+#	non-0 if errors.
+#	
+######################## LifeKeeper Linux CHANGE LOG #######################
+#
+# MR            date    user    description
+# ==            ====    ====    ==========
+########################## end CHANGE LOG ##################################
+use Getopt::Std; # use the standard getopt package
+BEGIN { require '/etc/default/LifeKeeper.pl'; }
+use lib "$ENV{LKROOT}/lkadm/subsys/gen/app/lib";
+use RKActionHandler;
+use strict;
+
+my ($appTag, $appId);
+chomp (my $me=`lcduname`);
+chomp (my $cmd=`basename $0`);
+our ($opt_t, $opt_i);
+my $ret;
+my $chkRet;
+my $ip;
+my $mask;
+my $dev;
+
+# main
+sub parseOptions { # noparams
+        getopts('t:i:');
+        $appTag = "$opt_t";
+        $appId = "$opt_i";
+};
+
+sub applogmsg {
+	my $level = shift;
+   	my $action = shift;
+   	my $tag = shift;
+   	my $msgid = shift;
+   	my $msgfmt = shift;
+   	my $text=sprintf($msgfmt, @_);
+   	$text=~s/\t//g;
+   	$text=~s/\n//g;
+   	my $_log = {'STDERR' => 1, 'LOGFILE' => 1};
+
+   	# Set tag to default if not passed in
+	if ($tag eq '') {
+		$tag = '';
+	}
+	if ($msgid eq '' ){
+		$msgid = '';
+	}
+
+	# Set action to default if not passed in
+   	if ($action eq '') {
+		$action = $cmd;
+   	}
+
+	#applogmsg (LK::LK_INFO, 'test', 'notag', 'noid', 'Try %s and %s', 1, 33);
+   	LKBase::LogMsg($_log, $level, 'ps-gen-app', $action, $tag, $msgid, $text);
+}
+
+# getLK
+sub getLK
+{
+	my $tag=shift;
+	my $sys=shift;
+	my @appIns = split /\001/, LK::ins_list($sys, '', '', '', $tag, '');
+	if (@appIns == 0 ){
+		applogmsg (LK::LK_ERROR, $cmd, $appTag, '800012', 'Usage, missing info for %s', $tag);
+		return 0;
+	};
+	my @appInfo = split /\s+/, $appIns[5];
+	$ip=$appInfo[0];
+	$mask=$appInfo[1];
+	$dev=$appInfo[2];
+
+	if ($ip eq '' || $mask eq '' || $dev eq '' ){
+		applogmsg (LK::LK_ERROR, $cmd, $appTag, '800013', 'Usage, missing info field values for %s', $tag);
+		return 0;
+	}
+	return 1;
+}
+
+sub checkForRoute
+{
+	my $ip=shift;
+	system ("netstat -rn 2>/dev/null |grep -wq $ip 2>/dev/null");
+	my $chkRet=($?>>8);
+	return $chkRet;
+}
+
+sub routeDelete
+{
+	my $ip=shift;
+	my $mask=shift;
+	my $tag;
+	my $cmd="route del -net $ip/$mask";
+	applogmsg (LK::LK_INFO, $cmd, $appTag, '800014', 'Route exists, removing route for tag %s. Cmd=%s', $tag,$cmd);
+	system ("$cmd >&2");
+	my $ret=($?>>8);
+	applogmsg (LK::LK_INFO, $cmd, $appTag, '800015', 'Removal cmd %s returned %s', $cmd, $ret);
+	return $ret;
+}
+
+parseOptions;
+if ($appTag eq '' || $appId eq '' ){
+	applogmsg (LK::LK_INFO, $cmd, $appTag, '800011', 'Usage, missing tag or id ');
+	exit 0;
+}
+getLK($appTag,$me);
+my $chkRet=checkForRoute($ip);
+if ($chkRet){
+	exit 0;
+}
+$ret=routeDelete($ip,$mask,$appTag);
+if (checkForRoute($ip) ){
+	exit 0;
+}
+applogmsg (LK::LK_INFO, $cmd, $appTag, '800016', 'End quickCheck failed for %s', $appTag);
+exit 1;

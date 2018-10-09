@@ -1,0 +1,23 @@
+#!/opt/LifeKeeper/bin/perl
+#
+#	Copyright (c) 2018 SIOS Technology Corp.
+# Description:
+#
+# Author:  cmr
+#
+# Implementation Date:
+#
+# Arguments:
+#	-t TAG		Tag name (gen/app)
+#	-i ID		ID
+#
+# Output:
+#   0 - no errors
+#	non-0 if errors.
+#	
+######################## LifeKeeper Linux CHANGE LOG #######################
+#
+# MR            date    user    description
+# ==            ====    ====    ==========
+########################## end CHANGE LOG ##################################
+exit 0;
