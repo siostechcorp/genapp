@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2018 SIOS Technology Corp.
+#
+# Revision: v01
+# Author:  cmr
+#
+# MR            date    user    description
+# ==            ====    ====    ==========
+# 001          12Oct18   CR     initial change
+########################## end CHANGE LOG ##################################
+Name: nasMounterAmgenConversion.pl
+
+Description:
+Amgen specific conversion script designed to update an older style gen/app used for mounting /sapmnt/<SID> to a newer SIOS script
+designed to mount and unmount nas shares for SAP.
+
+Directions (as root):
+1. On the source system, make a directory to download the SIOS scripts and tar file
+node1 # mkdir -p /tmp/sios-conv
+2. cd /tmp/sios-conv
+3. Download the script nasMounterAmgenConversion.pl and SIOS_enhancedMounter_gen_app-<version>.tgz.  Do not extract .tgz
+4. chmod a+x nasMounterAmgenConversion.pl
+5. execute the nasMounterAmgenConversion.pl
+        Usage:
+        full_path_to_tarfile - full path to the SIOS_enhancedNasMounter
+        tag - resource tag
+        mntPoint - the nas mount point
+        nfsServerIP - the IP of the nfs server
+        nfsExport - the actual NFS share being exported by the nfs server
+        mntOptions - mount options for the nas mount point (mntPoint)
+    Example: /tmp/sios-conv/nasMounterAmgenConversion.pl /tmp/sios-conv/SIOS_enhancedNasMounter_gen_app-05.00.21.tgz nasSQA /sapmnt/SQA 172.17.2.13 /export/sapmnt/SQA rw-sync-soft-bg-intr-timeo=30-retrans=2
+
+Troubleshooting:
+Cannot find tarfile error: Make sure to download the nasMounterAmgenConversion.pl file to the same directory containing the downloaded tar file
+System was down during update: Repeat steps 1 - 5 on each of the down systems
