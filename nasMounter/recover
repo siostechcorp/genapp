@@ -1,0 +1,4 @@
+#!/opt/LifeKeeper/bin/perl
+#
+#	Copyright (c) 2018 SIOS Technology Corp.
+exit 0;

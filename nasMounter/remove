@@ -1,0 +1,62 @@
+#!/opt/LifeKeeper/bin/perl
+#
+#	Copyright (c) 2018 SIOS Technology Corp.
+#
+# Description:
+#
+# Author:  cmr
+#
+# Implementation Date:
+#
+# Arguments:
+#	-t TAG		Tag name (gen/app)
+#	-i ID		ID
+#
+# Output:
+#   0 - no errors
+#	non-0 if errors.
+#	
+######################## LifeKeeper Linux CHANGE LOG #######################
+#
+# MR            date    user    description
+# ==            ====    ====    ==========
+########################## end CHANGE LOG ##################################
+
+use Getopt::Std; # use the standard getopt package
+BEGIN { require '/etc/default/LifeKeeper.pl'; }
+
+use lib "$ENV{LKROOT}/lkadm/subsys/gen/app/lib";
+use enhancedNasMounter;
+use RKActionHandler;
+use strict;
+
+my ($appTag, $appId);
+my $me=$enhancedNasMounter::me;
+our ($opt_t, $opt_i);
+# main
+sub parseOptions { # noparams
+        getopts('t:i:');
+        $appTag = "$opt_t";
+        $appId = "$opt_i";
+};
+parseOptions;
+print STDERR "INFORMATION: BEGIN remove of $appTag on $me\n";
+if ($appTag eq '' || $appId eq '' ){
+	enhancedNasMounter::usage('The gen/app tag or the gen/app id were not found or specified');
+	print STDERR "INFORMATION: END failed remove of $appTag on $me\n";
+	exit 1;
+}
+my $obj=enhancedNasMounter->new($appTag,'');
+if ($obj eq '' || $obj->{'fromtag'} == 0 ){
+	print STDERR "ERROR: Object generation failed\n";
+	print STDERR "INFORMATION: END failed remove of $appTag on $me\n";
+	exit 1;
+}	
+# mntpnt host export options
+my $ret=$obj->unMountFS();
+if ( $ret ){
+	print STDERR "INFORMATION: END successful remove of $appTag on $me\n";
+	exit 0;
+}
+print STDERR "INFORMATION: END failed remove of $appTag on $me\n";
+exit 1;

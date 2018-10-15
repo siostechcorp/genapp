@@ -1,0 +1,52 @@
+#!/opt/LifeKeeper/bin/perl
+
+#	Copyright (c) 2018 SIOS Technology Corp.
+# MR            date    user    description
+# ==            ====    ====    ==========
+#              16Apr18  CR      Initial PoC deployment
+#              23May18  CR      Customer fixes; down server
+#              27Jul18  CR      Customer fixes; perl path
+########################## end CHANGE LOG ##################################
+
+my $lib="enhancedNasMounter.pm";
+my $lkroot="/opt/LifeKeeper";
+my $libPath="$lkroot/lkadm/subsys/gen/app/lib";
+
+my @fileList=(
+$lib,
+"quickCheck",
+"recover",
+"remove",
+"restore"
+);
+my $ret=0;
+chomp (my $fullDir=`pwd`);
+print STDERR "Current directory\n\tCurrentDir=$fullDir\n";
+foreach my $file (@fileList){
+	if (! -f $file ){
+		print STDERR "Setup runtime error.  The file $file is not in the current directory. Setup is not complete!\n";
+		$ret=1;
+	}
+}
+
+if ($ret){
+	print STDERR "ERROR: Please run this script from the directory containing the gen/app files:\n@fileList\nSetup is not complete!\n";
+	exit 1;
+}
+
+print STDERR "Setup $lib in $libPath\n";
+if ( ! -d $libPath ){
+	system ("mkdir -vp $libPath;chmod 755 $libPath");
+}
+if (! -d $libPath ){
+	print STDERR "ERROR: Unable to make $libPath. Setup is not complete!\n";
+	exit 1;
+}
+
+system ("cp -vf $lib $libPath");
+if ( ! -f "$libPath/$lib"){
+	print STDERR "ERROR: Unable to setup the file $lib in $libPath.  Setup is not complete\n";
+	exit 1;
+}
+print STDERR "INFORMATION: Setup is completed on this system.  Please run the same script on the remaining systems in this cluster for the gen/app resource\n";
+exit 0;
