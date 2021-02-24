@@ -1,0 +1,15 @@
+#!/bin/python
+import os
+import sys
+import subprocess
+sys.path.append('/root/bin/blog')
+import sioscockroach
+import myvariables
+from myvariables import *
+
+return_code = sioscockroach.stopDB(execCmd,addr)
+sioscockroach.printS("Stopping DB returned {}".format(return_code))
+return_code = sioscockroach.statusDB(execCmd,addr)
+sioscockroach.printS("Status of DB returned {}".format(return_code))
+#print "Status of DB (after the stop) returned {}".format(return_code)
+sys.exit(sioscockroach.startDB(execCmd,addr,http,store))

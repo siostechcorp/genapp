@@ -1,0 +1,13 @@
+#!/bin/python
+import os
+import sys
+import subprocess
+sys.path.append('/root/bin/blog')
+import sioscockroach
+import myvariables
+from myvariables import *
+
+pid = sioscockroach.get_pid(execCmd)
+if int(pid) > 1:
+	sys.exit(sioscockroach.statusDB(execCmd,addr))
+sys.exit(sioscockroach.startDB(execCmd,addr,http,store))
